@@ -1,0 +1,40 @@
+name: rustc
+version: '1.21.0-0'
+summary: The rust compiler and tools as distributed from rust-lang.org
+description: |
+  This is the distribution of the rust compiler and tools from rust-lang.org
+  packed in a snap. Please see the README.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: classic
+
+
+apps:
+
+  cargo:
+    command: usr/local/bin/cargo
+
+  rls:
+    command: usr/local/bin/rls
+    
+  rustc:
+    command: usr/local/bin/rustc
+
+  rustdoc:
+    command: usr/local/bin/rustdoc
+
+  rust-gdb:
+    command: usr/local/bin/rust-gdb
+
+  rust-lldb:
+    command: usr/local/bin/rust-lldb
+      
+
+
+parts:
+
+  rust:
+    plugin: make
+    makefile: Makefile
+
+

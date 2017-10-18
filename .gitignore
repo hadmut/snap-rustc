@@ -1,0 +1,10 @@
+*~
+parts
+prime
+stage
+*.tar.gz
+*.tar.gz.asc
+*.tar.bz2
+*.snap
+
+snap/.snapcraft
