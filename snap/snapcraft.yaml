@@ -1,5 +1,5 @@
-name: rustc
-version: '1.21.0-0'
+name: rust
+version: '1.21.0-1'
 summary: The rust compiler and tools as distributed from rust-lang.org
 description: |
   This is the distribution of the rust compiler and tools from rust-lang.org
@@ -13,21 +13,27 @@ apps:
 
   cargo:
     command: usr/local/bin/cargo
+    aliases: [cargo]
 
   rls:
     command: usr/local/bin/rls
+    aliases: [rls]
     
   rustc:
     command: usr/local/bin/rustc
+    aliases: [rustc]
 
   rustdoc:
     command: usr/local/bin/rustdoc
+    aliases: [rustdoc]
 
   rust-gdb:
     command: usr/local/bin/rust-gdb
+    aliases: [rust-gdb]
 
   rust-lldb:
     command: usr/local/bin/rust-lldb
+    aliases: [rust-lldb]
       
 
 

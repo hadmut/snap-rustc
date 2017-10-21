@@ -19,38 +19,40 @@ Since this is still in the state of testing, there is no automated build and the
 2. umask 022 (important for some versions of snapcraft, the snap might not be readable for non-root users)
 3. run  snapcraft
 
-It should build a file like rustc_1.21.0-0_amd64.snap
+It should build a file like rust_1.21.0-1_amd64.snap . Since by default, snap prepends all executables with the snap name (except when name and snap name are identical), therefore turns cargo into rust.cargo (cargo won't find the other executables with these names) it is necessary to alias the names with the commands below in order to get the regular names of the executables. 
 
 ## Installation
-    sudo snap install --classic --dangerous rustc_1.21.0-0_amd64.snap
 
-## Deinstallation
-    sudo snap remove rustc
-
-## Known Problems and Limitations
-
-The snap system is quite strict in separating and encapsulating package contents. It enforces prepending the names of all executables with the name of the snap, except for the single case that the executable's name is identical with the snap name. So while rustc remains just rustc, cargo unfortunately becomes rustc.cargo, and so on. 
-
-This causes e.g. cargo to not find rustdoc. It will find rustc, because rustc keeps its name since identical with the package name.
-
-Aliases and Symlinks from /usr/local/bin/ to /snap/bin will **not** work, since snap uses the name to find the binary.
-
-As a workaround, one could install stub files like
-
-    #!/bin/bash
-    exec /snap/bin/rustc.rustdoc "$@"
-
-as /usr/local/bin/rustdoc (and so on for all five executables with rustc. prefixes). This is a one time task and would survive upgrading to new versions of the snap/rust compiler. I know, it's ugly, but that's how the snap policy is. 
-
-## Security
-
-snap offers (at least under ubuntu) several security modes, called confinements ([see documentation](https://docs.snapcraft.io/reference/confinement)), _strict_ beeing the strongest and recommended one. This, however, limits the read and write acces to $HOME/snap/rustc/... , requiring users to move their sources into this subdirectory. Since the compiler produces executable code, instead of directly running attacks, it could simply build malware into the generated binaries, so the confinement is not really effective for compilers. I therefore chose the 'classic' confinement, which is less secure, but allows the executables to be used as in regular packages, i.e. can access any file.
-
-Therefore the install command needs the --classic --dangerous options. snap would refuse installation otherwise. 
-
-## Running
+    sudo snap install --classic --dangerous rust_1.21.0-1_amd64.snap
+    sudo snap alias rust.rustc rustc
+    sudo snap alias rust.cargo cargo
+    sudo snap alias rust.rls rls
+    sudo snap alias rust.rustdoc rustdoc
+    sudo snap alias rust.rust-gdb rust-gdb
+    sudo snap alias rust.rust-lldb rust-lldb
 
 Executables will be placed in /snap/bin, so make sure to have this in your PATH variable.
+
+
+## Deinstallation
+    sudo snap remove rust
+
+## Open Issues
+### Aliases
+
+Snap renames all executables by prepending the snap name as a prefix (cargo becomes rust.cargo and so on), which is not just ugly, but causes cargo to not find the other tools. This can be fixed with aliases (see above).
+
+The aliasing of executables in snaps is currently work in progress. Although the configuration file syntax allows to configure automatic aliases, the snap installer does not currently honor them. Therefore the aliases must currently be entered manually until snap has finally settled this detail. 
+
+### Confinement
+
+The rust tools work well in the classic (unprotected) confinement, that's why it is currently set.
+
+It would be more desirable to run it in strict mode and to allow access to unhidden files in the users home directory, but that currently keeps rust from calling cc as a linker, since calling other programs outside the snap is not allowed in strict mode. 
+
+
+
+
 
 
 
